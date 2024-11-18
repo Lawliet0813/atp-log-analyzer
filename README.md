@@ -22,3 +22,17 @@ ATP(Automatic Train Protection)行車紀錄分析系統，用於解析與分析�
 
 ```bash
 pip install -r requirements.txt
+使用說明
+
+執行主程式：
+
+bashCopypython src/main.py
+
+載入RU檔案進行分析
+查看分析結果與報表
+
+注意事項
+
+本系統僅供ATP記錄分析使用
+不包含任何列車控制功能
+分析結果僅供參考，實際運行以ATP系統為準
