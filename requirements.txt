@@ -1,7 +1,30 @@
-PyQt6>=6.0.0
-pyqtgraph>=0.12.0
-numpy>=1.20.0
-pandas>=1.3.0
-pytest>=6.0.0
-pytest-qt>=4.0.0
-pytest-cov>=2.0.0
+# 主要GUI框架
+PyQt6>=6.4.0
+pyqtgraph>=0.13.1
+
+# 資料處理
+numpy>=1.23.0
+pandas>=1.5.0
+python-dateutil>=2.8.2
+
+# 文件處理
+openpyxl>=3.0.10
+xlrd>=2.0.1
+pyyaml>=6.0
+toml>=0.10.2
+
+# 資料分析
+scipy>=1.9.0
+statsmodels>=0.13.5
+
+# 圖形介面相關
+pillow>=9.3.0  # 圖片處理
+qdarkstyle>=3.1  # 暗色主題
+
+# 系統功能
+psutil>=5.9.0  # 系統資源監控
+pywin32>=305; platform_system == "Windows"  # Windows系統功能
+pyinstaller>=5.6.2  # 打包執行檔
+
+# 開發工具 (可選用 -r requirements-dev.txt 安裝)
+-r requirements-dev.txt
