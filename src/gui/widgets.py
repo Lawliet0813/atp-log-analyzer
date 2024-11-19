@@ -1,3 +1,5 @@
+# src/gui/widgets.py
+
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                            QLineEdit, QPushButton, QFrame)
 from PyQt6.QtCore import Qt, pyqtSignal
