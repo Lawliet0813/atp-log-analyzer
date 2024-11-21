@@ -1,0 +1,111 @@
+# src/analyzer/resources/templates/print_styles.html
+
+<style>
+/* 響應式樣式 */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+}
+
+/* 列印樣式 */
+@media print {
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .container {
+        max-width: none;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .section {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+    
+    .chart-container {
+        height: 200px;
+        page-break-inside: avoid;
+    }
+    
+    table {
+        page-break-inside: avoid;
+    }
+    
+    /* 表格分頁控制 */
+    tr {
+        page-break-inside: avoid;
+    }
+    
+    /* 區段分頁控制 */
+    .page-break {
+        page-break-before: always;
+    }
+    
+    /* 隱藏互動元素 */
+    button, .export-btn, .filter-controls {
+        display: none;
+    }
+    
+    /* 調整顏色 */
+    th {
+        background-color: #f0f0f0 !important;
+        color: #000 !important;
+    }
+    
+    /* 確保文字顏色列印正確 */
+    body, h1, h2, h3, td, th {
+        color: #000 !important;
+    }
+}
+
+/* 暗色主題支援 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #f0f0f0;
+    }
+    
+    .section {
+        background-color: #2d2d2d;
+    }
+    
+    table {
+        border-color: #4a4a4a;
+    }
+    
+    th {
+        background-color: #3a3a3a;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #333;
+    }
+    
+    .stat-card {
+        background-color: #2d2d2d;
+        border-color: #4a4a4a;
+    }
+}
+</style>
