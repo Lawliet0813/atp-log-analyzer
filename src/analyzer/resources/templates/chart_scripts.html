@@ -1,0 +1,148 @@
+# src/analyzer/resources/templates/chart_scripts.html
+
+<!-- Chart.js 引入 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- 速度曲線圖表初始化 -->
+<script>
+function initSpeedChart(data) {
+    const ctx = document.getElementById('speedChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.timestamps,
+            datasets: [{
+                label: '實際速度',
+                data: data.speeds,
+                borderColor: '#2ecc71',
+                borderWidth: 2,
+                fill: false
+            }, {
+                label: '速度限制',
+                data: data.speedLimits,
+                borderColor: '#e74c3c',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: '時間'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '速度 (km/h)'
+                    },
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: '速度時序圖'
+                }
+            }
+        }
+    });
+}
+
+// 速度分布圖表初始化
+function initSpeedDistChart(data) {
+    const ctx = document.getElementById('speedDistChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.intervals,
+            datasets: [{
+                label: '頻率',
+                data: data.counts,
+                backgroundColor: '#3498db'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: '速度區間 (km/h)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '次數'
+                    },
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: '速度分布圖'
+                }
+            }
+        }
+    });
+}
+
+// 事件分布圖表初始化
+function initEventChart(data) {
+    const ctx = document.getElementById('eventChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: '一般事件',
+                data: data.normalEvents,
+                backgroundColor: '#3498db'
+            }, {
+                label: '警告事件',
+                data: data.warningEvents,
+                backgroundColor: '#f1c40f'
+            }, {
+                label: '危急事件',
+                data: data.criticalEvents,
+                backgroundColor: '#e74c3c'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'minute'
+                    },
+                    title: {
+                        display: true,
+                        text: '時間'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: '事件類型'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: '事件分布圖'
+                }
+            }
+        }
+    });
+}
+</script>
