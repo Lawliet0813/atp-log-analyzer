@@ -1,0 +1,192 @@
+# src/analyzer/config/default_config.yaml
+
+# ATP分析器預設配置
+
+# 分析設定
+analysis:
+  # 分批處理大小
+  chunk_size: 1000
+  
+  # 速度閾值(km/h)
+  speed_threshold: 90.0
+  
+  # 是否啟用快取
+  cache_enabled: true
+  
+  # 是否啟用平行處理
+  parallel_enabled: true
+  
+  # 平行處理工作數量(None表示自動)
+  max_workers: null
+
+# 速度分析設定
+speed:
+  # 平滑化視窗大小
+  smooth_window: 5
+  
+  # 異常值檢測閾值(標準差倍數)
+  outlier_threshold: 3.0
+  
+  # 最大合理速度(km/h)
+  max_speed: 200.0
+  
+  # 速度分布區間數量
+  distribution_bins: 10
+  
+  # 加減速閾值(m/s²)
+  acceleration:
+    max_acceleration: 1.0
+    max_deceleration: -1.0
+    normal_acceleration: 0.8
+    normal_deceleration: -0.8
+
+# 事件分析設定
+event:
+  # 事件嚴重程度等級
+  severity_levels:
+    CRITICAL: 1  # 危急
+    HIGH: 2      # 高度警示
+    MEDIUM: 3    # 中度警示
+    LOW: 4       # 低度警示
+    INFO: 5      # 一般資訊
+  
+  # 最大事件數量限制
+  max_events: 1000
+  
+  # 事件分類標準
+  categories:
+    SPEED:  # 速度相關事件
+      OVER_SPEED: CRITICAL          # 超速
+      APPROACH_LIMIT: HIGH          # 接近速限
+      ACCELERATION_WARNING: MEDIUM  # 加速警告
+      SPEED_VARIATION: LOW         # 速度變化
+    
+    BRAKE:  # 煞車相關事件
+      EMERGENCY_BRAKE: CRITICAL     # 緊急煞車
+      SERVICE_BRAKE: HIGH           # 常用煞車
+      BRAKE_TEST: INFO             # 煞車測試
+      BRAKE_RELEASE: INFO          # 煞車解除
+    
+    SYSTEM: # 系統相關事件
+      ATP_FAILURE: CRITICAL        # ATP故障
+      MMI_FAILURE: HIGH           # MMI故障
+      COMMUNICATION_ERROR: HIGH    # 通訊異常
+      SYSTEM_STARTUP: INFO        # 系統啟動
+    
+    OPERATION: # 操作相關事件
+      ISOLATION: CRITICAL         # ATP隔離
+      MODE_CHANGE: HIGH          # 模式切換
+      PARAMETER_CHANGE: MEDIUM    # 參數變更
+      DRIVER_INPUT: LOW          # 駕駛輸入
+
+# 位置分析設定
+location:
+  # 距離閾值(km)
+  distance_threshold: 0.1
+  
+  # 時間閾值(秒)
+  time_threshold: 300
+  
+  # 車站半徑(km)
+  station_radius: 0.05
+  
+  # 位置分布區間大小(km)
+  bin_size: 10.0
+
+# 輸出設定
+output:
+  # 基礎輸出目錄
+  base_dir: outputs
+  
+  # 報表格式
+  report_formats: 
+    - excel
+    - csv
+  
+  # 日期時間格式
+  date_format: "%Y-%m-%d %H:%M:%S"
+  
+  # 數值格式
+  number_format: "{:.2f}"
+  
+  # 報表範本
+  templates:
+    excel: templates/excel_template.xlsx
+    html: templates/report_template.html
+  
+  # 匯出選項
+  export:
+    excel:
+      sheet_names:
+        summary: 摘要
+        speed: 速度分析
+        event: 事件分析
+        location: 位置分析
+    
+    csv:
+      encoding: utf-8
+      delimiter: ","
+    
+    json:
+      indent: 2
+      ensure_ascii: false
+
+# 日誌設定
+logging:
+  # 日誌等級
+  level: INFO
+  
+  # 日誌格式
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # 日誌檔案
+  file: atp_analyzer.log
+  
+  # 檔案大小限制(位元組)
+  max_bytes: 10485760  # 10MB
+  
+  # 備份檔案數量
+  backup_count: 5
+
+# 系統設定
+system:
+  # 編碼
+  encoding: utf-8
+  
+  # 時區
+  timezone: Asia/Taipei
+  
+  # 暫存目錄
+  temp_dir: temp
+  
+  # 快取目錄
+  cache_dir: cache
+  
+  # 資源目錄
+  resource_dir: resources
+
+# 站點資訊
+stations:
+  # 站點資料來源
+  data_source: config/stations.json
+  
+  # 站距限制(km)
+  min_distance: 0.5
+  
+  # 停站時間限制(秒)
+  min_dwell_time: 10
+  max_dwell_time: 600
+
+# 更新設定
+update:
+  # 自動檢查更新
+  auto_check: true
+  
+  # 檢查間隔(天)
+  check_interval: 7
+  
+  # 更新來源
+  update_url: https://example.com/atp-analyzer/update
+  
+  # 更新通知
+  notify_update: true
