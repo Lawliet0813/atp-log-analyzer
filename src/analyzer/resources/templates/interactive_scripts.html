@@ -1,0 +1,158 @@
+# src/analyzer/resources/templates/interactive_scripts.html
+
+<!-- 互動功能腳本 -->
+<script>
+// 資料過濾功能
+function filterData(data, startTime, endTime) {
+    return {
+        ...data,
+        timestamps: data.timestamps.filter((t, i) => {
+            const time = new Date(t);
+            return time >= startTime && time <= endTime;
+        }),
+        speeds: data.speeds.filter((_, i) => {
+            const time = new Date(data.timestamps[i]);
+            return time >= startTime && time <= endTime;
+        })
+    };
+}
+
+// 數據統計功能
+function calculateStats(speeds) {
+    const avg = speeds.reduce((a, b) => a + b, 0) / speeds.length;
+    const max = Math.max(...speeds);
+    const min = Math.min(...speeds);
+    return { avg, max, min };
+}
+
+// 表格排序功能
+function sortTable(tableId, column) {
+    const table = document.getElementById(tableId);
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    const sortedRows = rows.sort((a, b) => {
+        const aValue = a.cells[column].textContent;
+        const bValue = b.cells[column].textContent;
+        
+        if (!isNaN(aValue) && !isNaN(bValue)) {
+            return parseFloat(aValue) - parseFloat(bValue);
+        }
+        return aValue.localeCompare(bValue);
+    });
+    
+    tbody.innerHTML = '';
+    sortedRows.forEach(row => tbody.appendChild(row));
+}
+
+// 匯出功能
+function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const rows = Array.from(table.querySelectorAll('tr'));
+    
+    const csv = rows.map(row => {
+        const cells = Array.from(row.querySelectorAll('th, td'));
+        return cells.map(cell => cell.textContent).join(',');
+    }).join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// 視窗列印功能
+function printReport() {
+    const printContent = document.querySelector('.container').innerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>ATP分析報告</title>
+                <style>
+                    ${document.querySelector('style').innerHTML}
+                    @media print {
+                        .no-print { display: none; }
+                        .page-break { page-break-before: always; }
+                    }
+                </style>
+            </head>
+            <body>${printContent}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+}
+
+// 資料更新函數
+function updateCharts(newData) {
+    initSpeedChart(newData.speedData);
+    initSpeedDistChart(newData.speedDistData);
+    initEventChart(newData.eventData);
+}
+
+// 時間範圍選擇器功能
+function setupTimeRangeSelector() {
+    const startPicker = document.getElementById('startTime');
+    const endPicker = document.getElementById('endTime');
+    
+    startPicker.addEventListener('change', () => {
+        const startTime = new Date(startPicker.value);
+        const endTime = new Date(endPicker.value);
+        if (startTime && endTime) {
+            const filteredData = filterData(window.originalData, startTime, endTime);
+            updateCharts(filteredData);
+        }
+    });
+    
+    endPicker.addEventListener('change', () => {
+        const startTime = new Date(startPicker.value);
+        const endTime = new Date(endPicker.value);
+        if (startTime && endTime) {
+            const filteredData = filterData(window.originalData, startTime, endTime);
+            updateCharts(filteredData);
+        }
+    });
+}
+
+// 頁面載入完成後初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 儲存原始資料
+    window.originalData = {
+        speedData: {{ speed_data|tojson }},
+        speedDistData: {{ speed_dist_data|tojson }},
+        eventData: {{ event_data|tojson }}
+    };
+    
+    // 初始化圖表
+    initSpeedChart(window.originalData.speedData);
+    initSpeedDistChart(window.originalData.speedDistData);
+    initEventChart(window.originalData.eventData);
+    
+    // 設定互動功能
+    setupTimeRangeSelector();
+    
+    // 添加表格排序事件處理
+    document.querySelectorAll('th[data-sortable]').forEach(th => {
+        th.addEventListener('click', () => {
+            const column = th.cellIndex;
+            const tableId = th.closest('table').id;
+            sortTable(tableId, column);
+        });
+    });
+    
+    // 添加匯出按鈕事件處理
+    document.querySelectorAll('.export-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tableId = btn.dataset.table;
+            const filename = btn.dataset.filename;
+            exportTableToCSV(tableId, filename);
+        });
+    });
+});
+</script>
