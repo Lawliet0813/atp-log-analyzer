@@ -171,3 +171,37 @@ class CombinedAnalyzer:
             "ATP與MMI整合分析報告",
             "=" * 50,
             "\n速度記錄分析:
+"ATP與MMI整合分析報告",
+            "=" * 50,
+            "\n速度記錄分析:",
+            f"- 平均速度差異: {speed_corr['avg_difference']:.2f} km/h",
+            f"- 最大速度差異: {speed_corr['max_difference']:.2f} km/h",
+            f"- 標準差: {speed_corr['std_difference']:.2f} km/h",
+            f"- 匹配點數: {speed_corr['match_count']}",
+            f"- 異常點數: {len(speed_corr['abnormal_points'])}",
+            
+            "\n事件對應分析:",
+            f"- 事件對應率: {event_corr['correlation_rate']:.1%}",
+            f"- 對應事件數: {len(event_corr['correlated_events'])}",
+            f"- 未配對ATP事件: {len(event_corr['unpaired_ru_events'])}",
+            f"- 未配對MMI事件: {len(event_corr['unpaired_mmi_events'])}",
+            
+            "\n系統一致性分析:",
+            "時間覆蓋範圍:",
+            f"- ATP: {system_cons['time_coverage']['ru_start']} 至 {system_cons['time_coverage']['ru_end']}",
+            f"- MMI: {system_cons['time_coverage']['mmi_start']} 至 {system_cons['time_coverage']['mmi_end']}",
+            f"- 重疊時間: {system_cons['time_coverage']['overlap_start']} 至 {system_cons['time_coverage']['overlap_end']}",
+            
+            "\nATP記錄間隔:",
+            *[f"- {gap['start']} 至 {gap['end']} (間隔{gap['duration']:.1f}秒)"
+              for gap in system_cons['ru_gaps']],
+              
+            "\nMMI記錄間隔:",
+            *[f"- {gap['start']} 至 {gap['end']} (間隔{gap['duration']:.1f}秒)"
+              for gap in system_cons['mmi_gaps']],
+              
+            "\n狀態不一致:",
+            *[f"- {inc['time']}: {inc['description']}"
+              for inc in system_cons['state_inconsistencies']]
+        ]
+        return "\n".join(lines)
